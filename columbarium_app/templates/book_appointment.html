@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book an Appointment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .ribbon {
+            background-color: #EEE8AA;
+            color: white;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1001;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .nav-toggle {
+            background: none;
+            border: none;
+            color: #A57C00;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 15px;
+            transition: transform 0.3s ease-out;
+            font-weight: bold;
+            font-size: 25px;
+        }
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+        }
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: #DECC9C;
+            color: #333;
+            transition: left 0.3s ease-out;
+            z-index: 1002;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .nav-container.open {
+            left: 0;
+        }
+        .nav-header {
+            background-color: #DECC9C;
+            color: #333;
+            padding: 18px 20px;
+            font-size: 30px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+        }
+        .nav-items {
+            padding: 20px;
+        }
+        .nav-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-bottom: 1px solid #eee;
+            display: block;
+            color: #333;
+            text-decoration: none;
+        }
+        .nav-item:hover {
+            background-color: #f5f5f5;
+        }
+        .container {
+            flex-grow: 1;
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #fdfde7;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            margin-top: 70px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .booking-container {
+            display: flex;
+            gap: 30px;
+        }
+        .left-column, .right-column {
+            flex: 1;
+        }
+        .form-group {
+            margin-bottom: 30px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .appointment-types {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .appointment-type {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            background-color: white;
+            transition: background-color 0.3s;
+        }
+        .appointment-type:hover,
+        .appointment-type.selected {
+            background-color: #A57C00;
+            color: white;
+        }
+        .calendar {
+            margin-bottom: 20px;
+        }
+        .calendar table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .calendar th, .calendar td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        .calendar td {
+            cursor: pointer;
+        }
+        .calendar td:hover {
+            background-color: #f0f0f0;
+        }
+        .calendar td.selected {
+            background-color: #A57C00;
+            color: white;
+        }
+        .calendar td.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        .time-slot {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            background-color: white;
+            transition: background-color 0.3s;
+        }
+        .time-slot:hover,
+        .time-slot.selected {
+            background-color: #A57C00;
+            color: white;
+        }
+        .btn-container {
+            text-align: right;
+            margin-top: auto;
+        }
+        .btn {
+            display: inline-block;
+            background: #A57C00;
+            color: #fff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background: #9a7209;
+        }
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            margin-right: 10px;
+            text-decoration: none;
+        }
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="ribbon">
+            <button class="nav-toggle">☰</button>
+        </div>
+        <div class="nav-overlay"></div>
+        <nav class="nav-container">
+            <div class="nav-header">Menu</div>
+            <div class="nav-items">
+                <a href="#" class="nav-item">Home</a>
+                <a href="#" class="nav-item">Services</a>
+                <a href="#" class="nav-item">About Us</a>
+                <a href="#" class="nav-item">Contact</a>
+                <a href="{{ url_for('logout') }}" class="nav-item">Logout</a>
+            </div>
+        </nav>
+        <div class="container">
+            <h1>Book an Appointment</h1>
+            <form id="appointmentForm" action="{{ url_for('book_appointment') }}" method="POST">
+                <div class="booking-container">
+                    <div class="left-column">
+                        <div class="form-group">
+                            <label>Select appointment type</label>
+                            <div class="appointment-types">
+                                <div class="appointment-type" data-type="Site Visit">Site Visit</div>
+                                <div class="appointment-type" data-type="Interment / Funeral Service">Interment / Funeral Service</div>
+                                <div class="appointment-type" data-type="Niche Sales">Niche Sales</div>
+                                <div class="appointment-type" data-type="Floral Arrangement">Floral Arrangement</div>
+                            </div>
+                            <input type="hidden" id="appointmentType" name="appointment_type">
+                        </div>
+                    </div>
+                    <div class="right-column">
+                        <div class="form-group">
+                            <label>Select Date</label>
+                            <div class="calendar" id="calendar"></div>
+                            <input type="hidden" id="selectedDate" name="selected_date">
+                        </div>
+                        <div class="form-group">
+                            <label>Select Time</label>
+                            <div class="time-slots">
+                                <div class="time-slot" data-time="09:00 AM">9:00 AM</div>
+                                <div class="time-slot" data-time="10:00 AM">10:00 AM</div>
+                                <div class="time-slot" data-time="11:00 AM">11:00 AM</div>
+                                <div class="time-slot" data-time="02:00 PM">2:00 PM</div>
+                                <div class="time-slot" data-time="03:00 PM">3:00 PM</div>
+                                <div class="time-slot" data-time="04:00 PM">4:00 PM</div>
+                            </div>
+                            <input type="hidden" id="selectedTime" name="selected_time">
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <a href="{{ url_for('homepage') }}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn">Schedule Appointment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <p>Appointment booked successfully!</p>
+        </div>
+    </div>
+
+    <script>
+        const navToggle = document.querySelector('.nav-toggle');
+        const navContainer = document.querySelector('.nav-container');
+        const navOverlay = document.querySelector('.nav-overlay');
+        
+
+        function openNav() {
+            navContainer.classList.add('open');
+            navOverlay.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeNav() {
+            navContainer.classList.remove('open');
+            navOverlay.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        navToggle.addEventListener('click', openNav);
+        navOverlay.addEventListener('click', closeNav);
+
+        // Handle time slot selection
+        const timeSlots = document.querySelectorAll('.time-slot');
+        const selectedTimeInput = document.getElementById('selectedTime');
+        timeSlots.forEach(slot => {
+            slot.addEventListener('click', () => {
+                timeSlots.forEach(s => s.classList.remove('selected'));
+                slot.classList.add('selected');
+                selectedTimeInput.value = slot.getAttribute('data-time');
+            });
+        });
+
+        // Calendar functionality
+        const calendar = document.getElementById('calendar');
+        const selectedDateInput = document.getElementById('selectedDate');
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+
+        function generateCalendar(month, year) {
+            // Create a new Date object without time (only year, month, day)
+            const today = new Date();
+            const currentDateWithoutTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startDay = firstDay.getDay();
+        
+            let calendarHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="7">
+                                <button onclick="changeMonth(-1)">&lt;</button>
+                                ${new Date(year, month).toLocaleString('default', { month: 'long' })} ${year}
+                                <button onclick="changeMonth(1)">&gt;</button>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Sun</th>
+                            <th>Mon</th>
+                            <th>Tue</th>
+                            <th>Wed</th>
+                            <th>Thu</th>
+                            <th>Fri</th>
+                            <th>Sat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+        
+            let day = 1;
+            for (let i = 0; i < 6; i++) {
+                calendarHTML += '<tr>';
+                for (let j = 0; j < 7; j++) {
+                    if (i === 0 && j < startDay) {
+                        calendarHTML += '<td></td>';
+                    } else if (day > daysInMonth) {
+                        break;
+                    } else {
+                        const date = new Date(year, month, day);
+                        const isDisabled = date < currentDateWithoutTime; // Compare date without time
+        
+                        calendarHTML += `<td class="${isDisabled ? 'disabled' : ''}" onclick="${isDisabled ? '' : `selectDate(${year}, ${month}, ${day})`}">${day}</td>`;
+                        day++;
+                    }
+                }
+                calendarHTML += '</tr>';
+                if (day > daysInMonth) {
+                    break;
+                }
+            }
+        
+            calendarHTML += '</tbody></table>';
+            calendar.innerHTML = calendarHTML;
+        }
+        
+
+        function changeMonth(delta) {
+            currentMonth += delta;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            generateCalendar(currentMonth, currentYear);
+        }
+
+        function selectDate(year, month, day) {
+            const selectedDate = new Date(year, month, day);
+            // This will format the date in YYYY-MM-DD format based on local timezone
+            const formattedDate = selectedDate.getFullYear() + '-' + ('0' + (selectedDate.getMonth() + 1)).slice(-2) + '-' + ('0' + selectedDate.getDate()).slice(-2);
+            selectedDateInput.value = formattedDate;
+            const allDates = calendar.querySelectorAll('td');
+            allDates.forEach(td => td.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
+
+        // Initial calendar generation
+        generateCalendar(currentMonth, currentYear);
+
+        const appointmentTypes = document.querySelectorAll('.appointment-type');
+        const appointmentTypeInput = document.getElementById('appointmentType');
+
+        appointmentTypes.forEach(type => {
+            type.addEventListener('click', () => {
+                appointmentTypes.forEach(t => t.classList.remove('selected'));
+                type.classList.add('selected');
+                appointmentTypeInput.value = type.getAttribute('data-type');
+            });
+        });
+
+    
+    </script>
+</body>
+</html>

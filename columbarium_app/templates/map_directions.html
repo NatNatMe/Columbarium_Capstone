@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map and Directions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffe0; /* Light yellow background */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure the body takes at least the full viewport height */
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1 0 auto; /* Allow the container to grow but not shrink */
+        }
+        header {
+            background-color: #d4c371; /* Yellow top bar */
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header .menu-icon, header .logo {
+            width: 40px;
+            height: 40px;
+            background-color: lightgray; /* Placeholder for menu and logo */
+        }
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .search-bar input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            border: 2px solid #d4c371;
+            border-radius: 5px;
+        }
+        .map-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .map {
+            width: 60%;
+            height: 300px;
+            background-color: #ffffcc; /* Placeholder for map */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #d4c371;
+        }
+        .map img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .details {
+            width: 35%;
+            background-color: #ffffcc;
+            padding: 20px;
+            border: 1px solid #d4c371;
+        }
+        .directions {
+            background-color: #ffffcc;
+            padding: 20px;
+            border: 1px solid #d4c371;
+        }
+        footer {
+            background-color: #B8860B;
+            padding: 15px;
+            text-align: center;
+            font-size: 12px;
+            flex-shrink: 0; /* Prevent the footer from shrinking */
+        }
+
+        .ribbon {
+            background-color: #EEE8AA;
+            color: white;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1001;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .nav-toggle {
+            background: none;
+            border: none;
+            color: #A57C00;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 15px;
+            transition: transform 0.3s ease-out;
+            font-weight: bold;
+            font-size: 25px;
+        }
+        .nav-toggle:hover {
+            background-color: #EEE2AA;
+        }
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+        }
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: #DECC9C;
+            color: #333;
+            transition: left 0.3s ease-out;
+            z-index: 1002;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .nav-container.open {
+            left: 0;
+        }
+        .nav-header {
+            background-color: #DECC9C;
+            color: #333;
+            padding: 18px 20px;
+            font-size: 30px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+        }
+        .nav-items {
+            padding: 20px;
+        }
+        .nav-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-bottom: 1px solid #eee;
+            display: block;
+            color: #333;
+            text-decoration: none;
+        }
+        .nav-item:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="ribbon">
+                <button class="nav-toggle">☰</button>
+                
+            </div>
+            <div class="nav-overlay"></div>
+            <nav class="nav-container">
+                <div class="nav-header">Menu</div>
+                <div class="nav-items">
+                    <a href="{{ url_for('homepage') }}" class="nav-item">Home</a>
+                    <a href="#" class="nav-item">Services</a>
+                    <a href="#" class="nav-item">About Us</a>
+                    <a href="#" class="nav-item">Contact</a>
+                    <a href="{{ url_for('logout') }}" class="nav-item">Logout</a>
+                </div>
+               
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" placeholder="Search...">
+        </div>
+
+        <div class="map-section">
+            <div class="map">
+                <!-- Replace "Map Here" with the image -->
+                <img src="Map.jpg" alt="Map">
+            </div>
+            <div class="details">
+                <h2>{{ niche_info.name }}</h2>
+                <p>Location: {{ niche_info.location }}</p>
+                <p>{{ niche_info.details }}</p>
+            </div>
+        </div>
+
+        <div class="directions">
+            <h3>Direction</h3>
+            <ol>
+                {% for step in niche_info.directions %}
+                <li>{{ step }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+
+    <footer>
+        <p>Copyright © 2024 CodeSample.com. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const navToggle = document.querySelector('.nav-toggle');
+        const navContainer = document.querySelector('.nav-container');
+        const navOverlay = document.querySelector('.nav-overlay');
+        
+
+        function openNav() {
+            navContainer.classList.add('open');
+            navOverlay.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeNav() {
+            navContainer.classList.remove('open');
+            navOverlay.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        navToggle.addEventListener('click', openNav);
+        navOverlay.addEventListener('click', closeNav);
+    </script>
+</body>
+</html>

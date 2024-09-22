@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f5f5f5;
+        }
+        .login-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 500px;
+            height: 600px;
+        }
+        .logo-placeholder {
+            background-color: #e0e0e0;
+            height: 300px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        input[type="email"], input[type="password"], input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            border-color: #A57C00;
+        }
+        a {
+            color: #F0D159;
+        }
+        a:hover {
+            color: #B8860B;
+        }
+        .password-wrapper {
+            position: relative;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        .password-toggle svg {
+            width: 20px;
+            height: 20px;
+            fill: #888;
+        }
+        .forgot-password {
+            text-align: right;
+            font-size: 12px;
+            margin-bottom: 15px;       
+        }
+        ::placeholder {
+            color: #D3AF37;
+        }
+        .login-btn {
+            width: 40%;
+            height: 45px;
+            padding: 10px;
+            background-color: #B8860B;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 140px;
+            margin-top: 5px;
+            font-size: 16px;
+        }
+        .login-btn:hover {
+            background-color: #A57C00; 
+        }
+        .signup-link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            margin-right: 20px;
+        }
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #c9a032;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        .logo-placeholder {
+            margin-bottom: 30px;
+        }
+        .alert-danger {
+            color: red;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-placeholder"></div>
+        <h2 style="text-align: center;">Login</h2>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert-danger">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST">
+            <div class="form-group">
+                <input type="email" id="email" name="email" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                    <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="forgot-password">
+                <a href="{{ url_for('forgot_password') }}">Forgot password?</a>
+            </div>
+            <button type="submit" class="login-btn">Log In</button>
+        </form>
+        <div class="signup-link">
+            Don't have an account? <a href="{{ url_for('signup') }}">Sign up</a>
+        </div>
+    </div>
+    <div class="footer">
+        Copyright © 2024 Columbarium. All rights reserved.
+    </div>
+    <script>
+        document.querySelector('.password-toggle').addEventListener('click', function() {
+            var passwordInput = this.previousElementSibling;
+            var type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+        });
+    </script>
+</body>
+</html>

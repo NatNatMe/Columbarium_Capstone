@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Appointments</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fdfde7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            flex-grow: 1;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+        .header {
+            background-color: #A57C00;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .menu-icon {
+            width: 30px;
+            height: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        .menu-icon span {
+            width: 100%;
+            height: 3px;
+            background-color: #333;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .separator {
+            border: none;
+            border-top: 4px solid #B8860B;
+            margin: 20px 0;
+        }
+        .appointment-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .appointment-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        .appointment-item p {
+            margin: 5px 0;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .btn {
+            display: inline-block;
+            background: #A57C00;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            text-align: center;
+        }
+        .btn:hover {
+            background: #9a7209;
+        }
+
+        .ribbon {
+            background-color: #EEE8AA;
+            color: white;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1001;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .nav-toggle {
+            background: none;
+            border: none;
+            color: #A57C00;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 15px;
+            transition: transform 0.3s ease-out;
+            font-weight: bold;
+            font-size: 25px;
+        }
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+        }
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: #DECC9C;
+            color: #333;
+            transition: left 0.3s ease-out;
+            z-index: 1002;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .nav-container.open {
+            left: 0;
+        }
+        .nav-header {
+            background-color: #DECC9C;
+            color: #333;
+            padding: 18px 20px;
+            font-size: 30px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+        }
+        .nav-items {
+            padding: 20px;
+        }
+        .nav-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-bottom: 1px solid #eee;
+            display: block;
+            color: #333;
+            text-decoration: none;
+        }
+        .nav-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .footer {
+            background-color: #A57C00;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .footer-icon {
+            width: 24px;
+            height: 24px;
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="ribbon">
+        <button class="nav-toggle">☰</button>
+    </div>
+    <div class="nav-overlay"></div>
+    <nav class="nav-container">
+        <div class="nav-header">Menu</div>
+        <div class="nav-items">
+            <a href="#" class="nav-item">Home</a>
+            <a href="#" class="nav-item">Services</a>
+            <a href="#" class="nav-item">About Us</a>
+            <a href="#" class="nav-item">Contact</a>
+            <a href="{{ url_for('logout') }}" class="nav-item">Logout</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h2>Your Appointments</h2>
+        <hr class="separator">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% if appointments %}
+            <ul class="appointment-list">
+                {% for appointment in appointments %}
+                <li class="appointment-item">
+                    <p><strong>Type:</strong> {{ appointment.appointment_type }}</p>
+                    <p><strong>Date:</strong> {{ appointment.date | safe }}</p>
+                    <p><strong>Time:</strong> {{ appointment.time.strftime('%I:%M %p') }}</p>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You have no scheduled appointments.</p>
+        {% endif %}
+        <div class="button-container">
+            <a href="{{ url_for('book_appointment') }}" class="btn">Schedule New Appointment</a>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="footer-icon"></div>
+        <div class="footer-icon"></div>
+    </div>
+    <script>
+        const navToggle = document.querySelector('.nav-toggle');
+        const navContainer = document.querySelector('.nav-container');
+        const navOverlay = document.querySelector('.nav-overlay');
+        
+
+        function openNav() {
+            navContainer.classList.add('open');
+            navOverlay.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeNav() {
+            navContainer.classList.remove('open');
+            navOverlay.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        navToggle.addEventListener('click', openNav);
+        navOverlay.addEventListener('click', closeNav);
+
+    </script>
+</body>
+</html>
