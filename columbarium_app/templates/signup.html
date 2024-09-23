@@ -12,15 +12,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #f5f5f5;
+            background-image: url('https://scontent.fmnl4-1.fna.fbcdn.net/v/t31.18172-8/13584830_1133455450010077_6902386947384350757_o.jpg?_nc_cat=106&ccb=1-7&_nc_sid=f798df&_nc_eui2=AeGsp-u7CqqgSyj3FcxpEf55ddOFwx2zBsl104XDHbMGycyh0hHD6xEjR6I-0giwskMKk6QqWLtyl85-HEwZMNmu&_nc_ohc=WWJnXUQKEbgQ7kNvgHLmWAG&_nc_ht=scontent.fmnl4-1.fna&_nc_gid=Ay6maNYsGWKpqjDipYvJ7O0&oh=00_AYDiwsN-5HSeZGBsPwsLiel83HViOkbtqvTfjt5YLJ85QA&oe=6717AC7A');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
         .signup-container {
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
             width: 500px;
             height: 700px;
+            backdrop-filter: blur(5px);
         }
         .logo-placeholder {
             background-color: #e0e0e0;
@@ -106,6 +111,7 @@
         .logo-placeholder {
             margin-bottom: 30px;
         }
+        
         .password-validation {
             font-size: 12px;
             color: #888;
@@ -149,7 +155,9 @@
 </head>
 <body>
     <div class="signup-container">
-        <div class="logo-placeholder"></div>
+        <div class="logo-placeholder">
+            <img src="https://scontent.fmnl4-1.fna.fbcdn.net/v/t39.30808-6/344847523_1201633653830331_5933828577580088139_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHYy4pYiLtMFAqJ9UaoDPG7otgK2uVHG-mi2Ara5Ucb6XgTCGSpgCydy8bACf1iRykCHI_slzRDS5v2spDsIZr1&_nc_ohc=WBFCi00Y6F8Q7kNvgF2_xye&_nc_ht=scontent.fmnl4-1.fna&_nc_gid=Ad3mZ4U1OC0gbyuS1Nw_SX2&oh=00_AYB5UYWmc2iQx2dxXXOV-kKypkhOOHl-lIfUKGz-0e2Alg&oe=66F63C71" width="500" height="300">
+        </div>
         <h2 style="text-align: center;">Sign Up</h2>
         {% with messages = get_flashed_messages() %}
         {% if messages %}

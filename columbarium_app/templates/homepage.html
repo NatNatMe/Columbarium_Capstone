@@ -129,17 +129,17 @@
         .column {
             width: 30%;
         }
-        footer {
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #c9a032;
+            color: white;
             text-align: center;
-            padding: 20px 0;
-            background-color: #B8860B;
-            color: black;
+            padding: 10px 0;
         }
-
-        .title-section {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+        
         .button-container {
             display: flex;
             justify-content: center;
@@ -169,6 +169,10 @@
             font-size: 16px;
             margin-bottom: 5px;
             text-align: center;
+        }
+        .navbar .login-btn:hover {
+            background-color: #C39200;
+            color: white; /* Optional: Ensures the text remains white on hover */
         }
 
         .ribbon {
@@ -287,7 +291,7 @@
     <div class="container">
         <!-- Hero Section -->
         <div class="hero">
-            <p>"Experience a Cemetery like No Other"</p>
+            <img src="https://scontent.fmnl4-7.fna.fbcdn.net/v/t39.30808-6/344275994_1234940700716792_9029923314117064001_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeGs-1iH6Zf7RcIyNHW2vrNM7hz4FjM7Rj7uHPgWMztGPlsyqkyT1d85W_e1pyEDSMJ3jQE7Qwy277JfVZUn9Sxq&_nc_ohc=ng7UZIvOc_EQ7kNvgGvMaXI&_nc_ht=scontent.fmnl4-7.fna&_nc_gid=A2qNiD_JWlD2XTJ8PUY9Ub7&oh=00_AYDx9JNQ1_RqrH6wiGHY9vf_TiOS1lLlEXTWGhVrzWYpUQ&oe=66F63EAC" width="1320" height="300">
         </div>
         
         <!-- Updated Title Section with Buttons -->
@@ -305,20 +309,20 @@
                 </div>
             </div>
         </div>
-
+        <br>
         <!-- Carousel -->
         <div class="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item">
-                    <img src="/api/placeholder/1200/400" alt="Cemetery Image 1">
+                    <img src="https://scontent.fmnl4-2.fna.fbcdn.net/v/t1.6435-9/158441816_3917202664968661_7429731217095071222_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeFMzqmVeDeeAZQg84a2LOIx9Ue_BVYfxGn1R78FVh_EaZm1Fyiec6S7cvbtqVgTQY03Iiq0H-UNMuxXTXxJDI9k&_nc_ohc=mGQWrHLwqXYQ7kNvgEu00Vy&_nc_ht=scontent.fmnl4-2.fna&_nc_gid=A-oPkulM-3D-OuicV5bUhVC&oh=00_AYB4BfjURlbzJkBO2vxOAe8LUVokGbH5AbDjlChqcvkCKw&oe=6717DC03" alt="Cemetery Image 1">
                     <div class="carousel-caption">Beautiful Memorial Gardens</div>
                 </div>
                 <div class="carousel-item">
-                    <img src="/api/placeholder/1200/400" alt="Cemetery Image 2">
+                    <img src="https://scontent.fmnl4-2.fna.fbcdn.net/v/t1.6435-9/127642702_3633657066656557_2060269610698950966_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeGno7ymtmPMRCJFDyFQYqPzf16GFbvNvo1_XoYVu82-jU9ptZP9wup4ESAno63yR38pOllX79XfKZZOOegqb5dj&_nc_ohc=V5j7MxJRd28Q7kNvgHgkzVA&_nc_ht=scontent.fmnl4-2.fna&oh=00_AYA5VioksuRd013pb13HtlYWD1TpqTJySz4P1sMZg5lTyA&oe=67179CA0" alt="Cemetery Image 2">
                     <div class="carousel-caption">Peaceful Reflection Areas</div>
                 </div>
                 <div class="carousel-item">
-                    <img src="/api/placeholder/1200/400" alt="Cemetery Image 3">
+                    <img src="https://scontent.fmnl4-1.fna.fbcdn.net/v/t1.6435-9/127534283_3633656909989906_1754472818854298203_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeFhdmB-XfeXPR_peN8FfyYgJeJvfa6NkUYl4m99ro2RRsUJa0WeDpiDLGbXTXH95et9yCMD5bNuhJhD-vRasBPW&_nc_ohc=93LQ74LNJKkQ7kNvgGZro2V&_nc_ht=scontent.fmnl4-1.fna&oh=00_AYC6MGsvAAK3vLZTrh0KbcUTmupkkJjQS1xx4HNCNQGssQ&oe=6717C43A" alt="Cemetery Image 3">
                     <div class="carousel-caption">Historic Monuments</div>
                 </div>
             </div>
@@ -329,7 +333,7 @@
         <input type="text" class="search-bar" placeholder="Search...">
         
         <div class="map-section">
-            <img src="/api/placeholder/1200/300" alt="Map" class="map-image">
+            <img src="pictures\carouselone.jpg" alt="Map" class="map-image">
         </div>
         
         <div class="text-columns">
@@ -348,13 +352,46 @@
         </div>
     </div>
     
-    <footer>
-        <div class="container">
-            <p>© 2024 Cemetery Website. All rights reserved.</p>
-        </div>
-    </footer>
+    <div class="footer">
+        Copyright © 2024 Columbarium. All rights reserved.
+    </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const carousel = document.querySelector('.carousel-inner');
+        const items = document.querySelectorAll('.carousel-item');
+        const prevBtn = document.querySelector('.prev');
+        const nextBtn = document.querySelector('.next');
+        let currentIndex = 0;
+
+        function showSlide(index) {
+            if (index < 0) index = items.length - 1;
+            if (index >= items.length) index = 0;
+            carousel.style.transform = `translateX(-${index * 100}%)`;
+            currentIndex = index;
+        }
+
+        prevBtn.addEventListener('click', () => showSlide(currentIndex - 1));
+        nextBtn.addEventListener('click', () => showSlide(currentIndex + 1));
+
+        // Auto-play
+        function autoPlay() {
+            showSlide(currentIndex + 1);
+        }
+
+        let autoPlayInterval = setInterval(autoPlay, 5000);
+
+        // Pause auto-play when user interacts with carousel
+        carousel.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
+        carousel.addEventListener('mouseleave', () => autoPlayInterval = setInterval(autoPlay, 5000));
+
+        // Optional: Add keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') showSlide(currentIndex - 1);
+            if (e.key === 'ArrowRight') showSlide(currentIndex + 1);
+        });     
+        });
+        
 
         const navToggle = document.querySelector('.nav-toggle');
         const navContainer = document.querySelector('.nav-container');
@@ -385,24 +422,7 @@
             });
         });
 
-        const carousel = document.querySelector('.carousel-inner');
-        const items = document.querySelectorAll('.carousel-item');
-        const prevBtn = document.querySelector('.prev');
-        const nextBtn = document.querySelector('.next');
-        let currentIndex = 0;
 
-        function showSlide(index) {
-            if (index < 0) index = items.length - 1;
-            if (index >= items.length) index = 0;
-            carousel.style.transform = `translateX(-${index * 100}%)`;
-            currentIndex = index;
-        }
-
-        prevBtn.addEventListener('click', () => showSlide(currentIndex - 1));
-        nextBtn.addEventListener('click', () => showSlide(currentIndex + 1));
-
-        // Auto-play
-        setInterval(() => showSlide(currentIndex + 1), 5000);
     </script>
 </body>
 </html>

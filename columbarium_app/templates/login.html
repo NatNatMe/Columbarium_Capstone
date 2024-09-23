@@ -12,35 +12,45 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #f5f5f5;
+            background-image: url('https://scontent.fmnl4-1.fna.fbcdn.net/v/t31.18172-8/13584830_1133455450010077_6902386947384350757_o.jpg?_nc_cat=106&ccb=1-7&_nc_sid=f798df&_nc_eui2=AeGsp-u7CqqgSyj3FcxpEf55ddOFwx2zBsl104XDHbMGycyh0hHD6xEjR6I-0giwskMKk6QqWLtyl85-HEwZMNmu&_nc_ohc=WWJnXUQKEbgQ7kNvgHLmWAG&_nc_ht=scontent.fmnl4-1.fna&_nc_gid=Ay6maNYsGWKpqjDipYvJ7O0&oh=00_AYDiwsN-5HSeZGBsPwsLiel83HViOkbtqvTfjt5YLJ85QA&oe=6717AC7A');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
         .login-container {
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            width: 500px;
-            height: 600px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            width: 400px;
+            max-width: 90%;
+            margin: 20px;
+            backdrop-filter: blur(5px);
         }
         .logo-placeholder {
-            background-color: #e0e0e0;
-            height: 300px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo-placeholder img {
+            max-width: 100%;
+            height: auto;
             border-radius: 4px;
-            margin-bottom: 20px;
         }
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         input[type="email"], input[type="password"], input[type="text"] {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
+            padding: 12px;
+            border: 1px solid #A57C00;
             border-radius: 4px;
             box-sizing: border-box;
-            border-color: #A57C00;
+            font-size: 16px;
         }
         a {
-            color: #F0D159;
+            color: #A57C00;
+            text-decoration: none;
         }
         a:hover {
             color: #B8860B;
@@ -65,57 +75,60 @@
         }
         .forgot-password {
             text-align: right;
-            font-size: 12px;
-            margin-bottom: 15px;       
+            font-size: 14px;
+            margin-bottom: 20px;       
         }
         ::placeholder {
             color: #D3AF37;
         }
         .login-btn {
-            width: 40%;
-            height: 45px;
-            padding: 10px;
+            width: 100%;
+            padding: 12px;
             background-color: #B8860B;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin-left: 140px;
-            margin-top: 5px;
-            font-size: 16px;
+            font-size: 18px;
+            transition: background-color 0.3s;
         }
         .login-btn:hover {
             background-color: #A57C00; 
         }
         .signup-link {
             text-align: center;
-            margin-top: 15px;
+            margin-top: 20px;
             font-size: 14px;
-            margin-right: 20px;
         }
         .footer {
             position: fixed;
             left: 0;
             bottom: 0;
             width: 100%;
-            background-color: #c9a032;
+            background-color: rgba(201, 160, 50, 0.8);
             color: white;
             text-align: center;
             padding: 10px 0;
-        }
-        .logo-placeholder {
-            margin-bottom: 30px;
+            font-size: 14px;
         }
         .alert-danger {
-            color: red;
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
             margin-bottom: 20px;
             text-align: center;
+            border-radius: 4px;
         }
+    </style>
+</head>
     </style>
 </head>
 <body>
     <div class="login-container">
-        <div class="logo-placeholder"></div>
+        <div class="logo-placeholder">
+            <img src="https://scontent.fmnl4-3.fna.fbcdn.net/v/t31.18172-8/13576867_1133457703343185_1012212943709814055_o.jpg?_nc_cat=110&ccb=1-7&_nc_sid=b895b5&_nc_eui2=AeGBd1NKs00o129jrgFJKcUN7v8ZiEqYd9zu_xmISph33Gdv-iu4HfHdgVgV6F28UXW_20C4XbiyHOskbCfTNcsX&_nc_ohc=kPRgiuhHbIUQ7kNvgEhyQL2&_nc_ht=scontent.fmnl4-3.fna&_nc_gid=ABG_GIVIinRvv4FNz9Rtheo&oh=00_AYBizeuKXtml53chMF1L89K4Ps9PhaQI4qy4bhApRK4C0Q&oe=6717C7A7" width="500" height="300">
+        </div>
         <h2 style="text-align: center;">Login</h2>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
