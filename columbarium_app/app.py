@@ -6,6 +6,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import pytz
 from datetime import datetime
 import os
+from flask_cors import CORS
+
+# import fuzzyLogicFunction from fuzzyLogic
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key_here'
@@ -13,6 +16,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+CORS(app)
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -114,9 +118,94 @@ def view_appointments():
 
     return render_template('view_appointments.html', appointments=appointments)
 
-@app.route('/locate_niche')
-@login_required
+#sample data 
+deceased_data = {
+    "John Doe": {"terrace": "A", "column": "B", "row": 3, "floor": 1, "death": "Jan 29, 2000", "deceased_name": "John Doe"},
+    "Jane Smith": {"terrace": "C", "column": "F", "row": 5, "floor": 2, "death": "Oct 12, 2020", "deceased_name": "Jane Smith"},
+    "James Brown": {"terrace": "B", "column": "A", "row": 7, "floor": 3, "death": "Dec 17, 2015", "deceased_name": "James Brown"}
+    }
+
+def get_directions(terrace, column, row, floor):
+    # Step-by-step directions based on input
+    directions = []
+    directions.append("Enter through the main gate")
+
+    # Directions to the floor
+    if floor == 1:
+        directions.append("Go up to Floor 1")
+    elif floor == 2:
+        directions.append("Go up to Floor 2")
+    elif floor == 3:
+        directions.append("Go up to Floor 3")
+
+    # Directions to the Terrace
+    if terrace == "A":
+        directions.append("Turn right at the first intersection")
+    elif terrace == "B":
+        directions.append("Turn left at the second intersection")
+    elif terrace == "C":
+        directions.append("Go straight and take the third left")
+    elif terrace == "D":
+        directions.append("Turn left at the fourth intersection")
+
+    # Add distance guidance
+    directions.append(f"Continue straight for {row * 10} meters")  # Assuming row defines distance
+
+    # Final directions to the column and row
+    directions.append(f"The niche is located on your left in Terrace {terrace}, Column {column}, Row {row}")
+    
+
+    return directions
+
+@app.route('/locate_niche', methods=['POST'])
+# @login_required
 def locate_niche():
+    data = request.json
+    
+    name = data.get('name')
+    terrace = data.get('terrace')
+    column = data.get('column')
+    row = data.get('row')
+    floor = data.get('floor')
+
+    # Check if the user is searching by name
+    death_date = None
+
+    if name:
+        if name in deceased_data:
+            # Retrieve the corresponding location for the deceased
+            location = deceased_data[name]
+            terrace = location["terrace"]
+            column = location["column"]
+            row = location["row"]
+            floor = location["floor"]
+            death_date = location["death"]  # Get the death date
+            deceased_name = location["deceased_name"]
+
+        else:
+            return jsonify({"error": "Name not found"}), 404
+
+    # Check if all necessary location data (terrace, column, row, floor) is provided
+    if not (terrace and column and row and floor):
+        return jsonify({"error": "Incomplete location information"}), 400 
+    
+
+    # Generate directions based on the location
+    directions = get_directions(terrace, column, row, floor)
+    nicheLocation = [terrace, column, row, floor]
+    
+    response = {
+        "directions": directions,
+        "death_date": death_date if death_date else None,  # Include death date if it exists
+        "deceased_name": deceased_name if deceased_name else None,
+        "nicheLocation": nicheLocation
+    }
+
+    return jsonify(response)
+
+# test route
+@app.route('/locate', methods=['GET'])
+def locate():
     niche_info = {
         'name': 'Sample Niche',
         'location': '123 Cemetery Lane, Section A, Row 5',
@@ -127,8 +216,10 @@ def locate_niche():
             'Continue straight for 100 meters',
             'The niche is located on your left in Section A, Row 5'
         ]
-    }
+    }   
     return render_template('map_directions.html', niche_info=niche_info)
+
+
 
 @app.route('/logout')
 @login_required

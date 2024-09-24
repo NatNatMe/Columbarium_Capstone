@@ -36,7 +36,7 @@
         .search-bar {
             display: flex;
             justify-content: center;
-            margin: 20px 0;
+            margin: 20px 0px;
         }
         .search-bar input[type="text"] {
             width: 80%;
@@ -157,6 +157,18 @@
         .nav-item:hover {
             background-color: #f5f5f5;
         }
+        .dropdown {
+            padding: 7px;
+            margin-top: 10px;
+            background-color: #FFE4C4;
+            
+        }
+        .submit-btn {
+            padding: 7px;
+            background-color: #FFE4C4;
+            border-style: outset;
+            margin-right: -90px;
+        }
     </style>
 </head>
 <body>
@@ -183,27 +195,58 @@
 
     <div class="container">
         <div class="search-bar">
-            <input type="text" placeholder="Search...">
+            <form id="locateNicheForm">
+                <input type="text" name="name" placeholder="Enter Name" required>
+
+                <select class="dropdown" name="terrace" required>
+                    <option value="" disabled selected>Select Terrace</option>
+                    <option value="A">Terrace A</option>
+                    <option value="B">Terrace B</option>
+                    <option value="C">Terrace C</option>
+                </select>
+
+                <select class="dropdown" name="column" required>
+                    <option value="" disabled selected>Select Column</option>
+                    <option value="A">Column A</option>
+                    <option value="B">Column B</option>
+                    <option value="C">Column C</option>
+                </select>
+
+                <select class="dropdown" name="row" required>
+                    <option value="" disabled selected>Select Row</option>
+                    <option value="1">Row 1</option>
+                    <option value="2">Row 2</option>
+                    <option value="3">Row 3</option>
+                </select>
+
+                <select class="dropdown" name="floor" required>
+                    <option value="" disabled selected>Select Floor</option>
+                    <option value="1">Floor 1</option>
+                    <option value="2">Floor 2</option>
+                    <option value="3">Floor 3</option>
+                </select>
+                <input class="submit-btn" type="submit" value="Locate">
+            </form>
+            <div id="result" style="margin-top: 20px;"></div>
         </div>
 
         <div class="map-section">
             <div class="map">
                 <!-- Replace "Map Here" with the image -->
-                <img src="Map.jpg" alt="Map">
+                <img src="ground.png" alt="Map">
             </div>
             <div class="details">
                 <h2>{{ niche_info.name }}</h2>
-                <p>Location: {{ niche_info.location }}</p>
-                <p>{{ niche_info.details }}</p>
+                <p id="deathDate">Date of Death: </p>
+                <p id="nicheLocation">Location:</p>
+                <p id="deceasedName">Name of Deceased:</p>
             </div>
         </div>
 
         <div class="directions">
             <h3>Direction</h3>
             <ol>
-                {% for step in niche_info.directions %}
-                <li>{{ step }}</li>
-                {% endfor %}
+                <li id="directionsList">No Directions Yet</li>
             </ol>
         </div>
     </div>
@@ -232,6 +275,42 @@
 
         navToggle.addEventListener('click', openNav);
         navOverlay.addEventListener('click', closeNav);
+
+        // javascript for form submission
+        document.getElementById('locateNicheForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData(this);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            fetch('/locate_niche', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('result').innerHTML = `<p style="color: red;">${data.error}</p>`;
+                    document.getElementById('directionsList').innerText = ''; // Clear previous directions
+                } else {
+                    // Update the directions list with the fetched directions
+                    document.getElementById('result').innerHTML = `<p style="color: green; margin-top: -50px; margin-left: -423px;">Location found!</p>`;
+                    document.getElementById('directionsList').innerText = data.directions; // Assuming the server sends back directions as a string
+                    document.getElementById('deathDate').innerText = `Date of Death: ${data.death_date}`; // Corrected line
+                    document.getElementById('deceasedName').innerText = `Name of Deceased: ${data.deceased_name}`;
+                    document.getElementById('nicheLocation').innerText = `Location: ${data.nicheLocation}`;
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
     </script>
 </body>
 </html>
