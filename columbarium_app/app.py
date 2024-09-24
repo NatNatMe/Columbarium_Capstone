@@ -7,6 +7,7 @@ import pytz
 from datetime import datetime
 import os
 from flask_cors import CORS
+from fuzzywuzzy import process
 
 # import fuzzyLogicFunction from fuzzyLogic
 
@@ -122,7 +123,7 @@ def view_appointments():
 deceased_data = {
     "John Doe": {"terrace": "A", "column": "B", "row": 3, "floor": 1, "death": "Jan 29, 2000", "deceased_name": "John Doe"},
     "Jane Smith": {"terrace": "C", "column": "F", "row": 5, "floor": 2, "death": "Oct 12, 2020", "deceased_name": "Jane Smith"},
-    "James Brown": {"terrace": "B", "column": "A", "row": 7, "floor": 3, "death": "Dec 17, 2015", "deceased_name": "James Brown"}
+    "James Brown": {"terrace": "B", "column": "A", "row": 1, "floor": 3, "death": "Dec 17, 2015", "deceased_name": "James Brown"}
     }
 
 def get_directions(terrace, column, row, floor):
@@ -170,33 +171,31 @@ def locate_niche():
 
     # Check if the user is searching by name
     death_date = None
+    deceased_name = None
 
     if name:
-        if name in deceased_data:
-            # Retrieve the corresponding location for the deceased
-            location = deceased_data[name]
+        # Use fuzzy matching to find the closest match
+        match, score = process.extractOne(name, deceased_data.keys())
+        if score > 80:  # Threshold for a good match
+            location = deceased_data[match]
             terrace = location["terrace"]
             column = location["column"]
             row = location["row"]
             floor = location["floor"]
-            death_date = location["death"]  # Get the death date
+            death_date = location["death"]
             deceased_name = location["deceased_name"]
-
         else:
             return jsonify({"error": "Name not found"}), 404
 
-    # Check if all necessary location data (terrace, column, row, floor) is provided
     if not (terrace and column and row and floor):
         return jsonify({"error": "Incomplete location information"}), 400 
     
-
-    # Generate directions based on the location
     directions = get_directions(terrace, column, row, floor)
     nicheLocation = [terrace, column, row, floor]
     
     response = {
         "directions": directions,
-        "death_date": death_date if death_date else None,  # Include death date if it exists
+        "death_date": death_date if death_date else None,
         "deceased_name": deceased_name if deceased_name else None,
         "nicheLocation": nicheLocation
     }
