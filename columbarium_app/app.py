@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, send_from_directory, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -8,6 +8,7 @@ from datetime import datetime
 import os
 from flask_cors import CORS
 from fuzzywuzzy import process
+from flask import url_for
 
 # import fuzzyLogicFunction from fuzzyLogic
 
@@ -121,8 +122,8 @@ def view_appointments():
 
 #sample data 
 deceased_data = {
-    "John Doe": {"terrace": "A", "column": "B", "row": 3, "floor": 1, "death": "Jan 29, 2000", "deceased_name": "John Doe"},
-    "Jane Smith": {"terrace": "C", "column": "F", "row": 5, "floor": 2, "death": "Oct 12, 2020", "deceased_name": "Jane Smith"},
+    "John Doe": {"terrace": "A", "column": "B", "row": 3, "floor": 1, "death": "Jan 29, 2000", "deceased_name": "John Doe", "map": "map.gif"},
+    "Jane Smith": {"terrace": "C", "column": "F", "row": 5, "floor": 2, "death": "Oct 12, 2020", "deceased_name": "Jane Smith", "map": "mapzz.gif"},
     "James Brown": {"terrace": "B", "column": "A", "row": 1, "floor": 3, "death": "Dec 17, 2015", "deceased_name": "James Brown"}
     }
 
@@ -184,6 +185,7 @@ def locate_niche():
             floor = location["floor"]
             death_date = location["death"]
             deceased_name = location["deceased_name"]
+            mapDisplay = [f"/larawan/{location['map']}"]  # Dynamically set the map path
         else:
             return jsonify({"error": "Name not found"}), 404
 
@@ -197,10 +199,17 @@ def locate_niche():
         "directions": directions,
         "death_date": death_date if death_date else None,
         "deceased_name": deceased_name if deceased_name else None,
-        "nicheLocation": nicheLocation
+        "nicheLocation": nicheLocation,
+        "mapDisplay": mapDisplay,
     }
 
     return jsonify(response)
+# para sa image no choice na e
+@app.route('/larawan/<path:filename>')
+def serve_larawan(filename):
+    return send_from_directory('larawan', filename)
+
+
 
 # test route
 @app.route('/locate', methods=['GET'])

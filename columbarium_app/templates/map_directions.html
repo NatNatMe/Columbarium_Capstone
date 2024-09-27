@@ -233,7 +233,7 @@
         <div class="map-section">
             <div class="map">
                 <!-- Replace "Map Here" with the image -->
-                <img src="ground.png" alt="Map">
+                <img id="mapImage" src="" alt="Map" style="display: none;">
             </div>
             <div class="details">
                 <h2>{{ niche_info.name }}</h2>
@@ -298,7 +298,12 @@
                 if (data.error) {
                     document.getElementById('result').innerHTML = `<p style="color: red;">${data.error}</p>`;
                     document.getElementById('directionsList').innerText = ''; // Clear previous directions
+                    document.getElementById('mapImage').style.display = `none`;
                 } else {
+                    const mapImage = document.getElementById('mapImage');
+                    mapImage.src = data.mapDisplay[0]; 
+                    mapImage.style.display = 'block'; 
+
                     // Update the directions list with the fetched directions
                     document.getElementById('result').innerHTML = `<p style="color: green; margin-top: -50px; margin-left: -423px;">Location found!</p>`;
                     document.getElementById('directionsList').innerText = data.directions; // Assuming the server sends back directions as a string
